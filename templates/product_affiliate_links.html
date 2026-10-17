@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Product Affiliate Links{% endblock %}
+
+{% block content %}
+    <h1>Product Affiliate Links</h1>
+
+    {% if links %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Affiliate Link</th>
+                    <th>Network</th>
+                    <th>Added By User</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for link in links %}
+                    <tr>
+                        <td>{{ link.id }}</td>
+                        <td>{{ link.product_name }}</td>
+                        <td><a href="{{ link.affiliate_link }}" target="_blank">{{ link.affiliate_link }}</a></td>
+                        <td>{{ link.affiliate_program.network | capitalize if link.affiliate_program else 'N/A' }}</td>
+                        <td>{{ '✅ Yes' if link.added_by_user else '❌ No' }}</td>
+                        <td>{{ link.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No product affiliate links found yet.</p>
+    {% endif %
+{% endblock %}

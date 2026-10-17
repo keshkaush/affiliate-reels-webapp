@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Content Detail - {{ content.title[:50] }}{% endblock %}
+
+{% block content %}
+    <h1>Content Detail</h1>
+
+    <a href="{{ url_for('index') }}">&larr; Back to Content List</a>
+
+    <section>
+        <h2>{{ content.title }}</h2>
+        <p><strong>Platform:</strong> {{ content.platform }}</p>
+        <p><strong>URL:</strong> <a href="{{ content.video_url }}" target="_blank">{{ content.video_url }}</a></p>
+        <p><strong>Description:</strong> {{ content.description }}</p>
+        <p><strong>Author:</strong> {{ content.author }}</p>
+        <p><strong>Niche:</strong> {{ content.niche }}</p>
+        <p><strong>Views:</strong> {{ '{:,}'.format(content.views) }} | <strong>Likes:</strong> {{ '{:,}'.format(content.likes) }} | <strong>Comments:</strong> {{ '{:,}'.format(content.comments) }}</p>
+        <p><strong>Faceless Content:</strong> {{ '✅ Yes' if content.is_faceless else '❌ No' }}</p>
+        <p><strong>Products Found (AI):</strong> {{ content.products_found }}</p>
+        <p><strong>Discovery Date:</strong> {{ content.timestamp.strftime('%Y-%m-%d %H:%M') }}</p>
+    </section>
+
+    <hr>
+
+    <section>
+        <h2>Affiliate Options</h2>
+        {% if affiliate_options %}
+            {% for option in affiliate_options %}
+                <h3>Product: {{ option.product }}</h3>
+                {% if option.source == 'database' %}
+                    <p>Found in Database:</p>
+                    <ul>
+                        {% for link in option.links %}
+                            <li>
+                                <strong>Network:</strong> {{ link.affiliate_program.network | capitalize }} -
+                                <a href="{{ link.affiliate_link }}" target="_blank">{{ link.affiliate_link }}</a>
+                                (Commission: {{ link.affiliate_program.commission_rate }}, Cookie: {{ link.affiliate_program.cookie_duration }} days)
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% elif option.source == 'flagged_for_user' %}
+                    <p class="error">No affiliate links found in database for {{ option.product }}. Please provide one:</p>
+                    <a href="{{ url_for('add_affiliate_link', content_id=content.id, product_name=option.product) }}" class="button">Add Affiliate Link</a>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>No products identified or no affiliate options available yet for this content.</p>
+        {% endif %}
+    </section>
+{% endblock %}

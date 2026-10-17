@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Add Affiliate Link{% endblock %}
+
+{% block content %}
+    <h1>Add Affiliate Link for "{{ product_name }}"</h1>
+
+    <a href="{{ url_for('view_content', content_id=content.id) }}">&larr; Back to Content Details</a>
+
+    <p>Please provide the affiliate link and program details for <strong>{{ product_name }}</strong>:</p>
+
+    <form action="{{ url_for('add_affiliate_link', content_id=content.id, product_name=product_name) }}" method="POST">
+        <label for="affiliate_link_url">Affiliate Link URL:</label>
+        <input type="url" id="affiliate_link_url" name="affiliate_link_url" placeholder="e.g., https://amzn.to/your-link" required>
+
+        <label for="network">Affiliate Network:</label>
+        <input type="text" id="network" name="network" placeholder="e.g., Amazon, ShareASale" required>
+
+        <label for="commission">Commission Rate (optional):</label>
+        <input type="text" id="commission" name="commission" placeholder="e.g., 5% or Up to 10%">
+
+        <label for="cookie_duration">Cookie Duration (days, optional):</label>
+        <input type="number" id="cookie_duration" name="cookie_duration" value="30" min="1">
+
+        <button type="submit">Add Link</button>
+    </form>
+{% endblock %}
